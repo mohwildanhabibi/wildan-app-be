@@ -3,7 +3,7 @@ require("module-alias/register");
 require("./db/db");
 const express = require("express");
 const app = express();
-const port = 9001;
+const port = 3000;
 
 // const auth = require("./controllers/authController");
 const clusterController = require("./controllers/clusterController");
