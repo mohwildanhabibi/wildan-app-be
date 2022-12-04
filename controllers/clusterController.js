@@ -28,9 +28,32 @@ app.get("/:id", async (req, res) => {
   }
 });
 
+app.get("/:id/print", async (req, res) => {
+  try {
+    let cluster = null;
+    if (req.params.id == "nganjuk") {
+      cluster = await Cluster.findOne({ _id: "638c9860350fe5e223decd1f" });
+    } else {
+      cluster = await Cluster.findOne({ _id: req.params.id });
+    }
+    let text = `${cluster.header}\nPeriode ${cluster.period}, Minggu Ke ${cluster.week}\n`;
+    for (const key in cluster.data) {
+      text += `Juz ${parseInt(key) + 1}: ${cluster.data[key]}\n`;
+    }
+    res.send(text);
+  } catch (error) {
+    errorHandler.UnHandler(res, error);
+  }
+});
+
 app.patch("/:id/next", async (req, res) => {
   try {
-    const cluster = await Cluster.findOne({ _id: req.params.id });
+    let cluster = null;
+    if (req.params.id == "nganjuk") {
+      cluster = await Cluster.findOne({ _id: "638c9860350fe5e223decd1f" });
+    } else {
+      cluster = await Cluster.findOne({ _id: req.params.id });
+    }
     cluster.week += 1;
     if (cluster.week == 31) {
       cluster.period += 1;
@@ -53,7 +76,12 @@ app.patch("/:id/next", async (req, res) => {
 
 app.patch("/:id/prev", async (req, res) => {
   try {
-    const cluster = await Cluster.findOne({ _id: req.params.id });
+    let cluster = null;
+    if (req.params.id == "nganjuk") {
+      cluster = await Cluster.findOne({ _id: "638c9860350fe5e223decd1f" });
+    } else {
+      cluster = await Cluster.findOne({ _id: req.params.id });
+    }
     cluster.week -= 1;
     if (cluster.week < 1) {
       cluster.period -= 1;
