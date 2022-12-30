@@ -18,7 +18,7 @@ app.get("/", async (req, res, next) => {
 
 app.get("/my-ip", async (req, res, next) => {
   try {
-    const ipAddress = req.socket.remoteAddress;
+    const ipAddress = req.header('x-forwarded-for') || req.socket.remoteAddress;
     res.send(ipAddress);
   } catch (error) {
     next(error);
